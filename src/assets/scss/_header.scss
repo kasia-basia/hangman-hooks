@@ -1,0 +1,57 @@
+.header {
+  height: 15vh;
+  padding: 40px;
+}
+
+.header__content {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__refresh-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 20px;
+  background: none;
+  border: none;
+
+  &:hover {
+
+  }
+
+  span {
+    font-size: 22px;
+    transition: 0.3s;
+  }
+
+  img {
+    margin-left: 10px;
+    height: 50px;
+
+    &:hover {
+      animation: wiggle 1.3s ease forwards;
+    }
+  }
+}
+
+.header__title {
+  font-weight: normal;
+  margin: 0;
+  font-size: 40px;
+  @media #{$tablet} {
+    font-size: 70px;
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
