@@ -1,25 +1,12 @@
-.hangman{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media #{$tablet} {
-    width: 30%;
-  }
-
+.hangman {
+  width: 250px;
+  margin: 30px;
 }
 
-.hangman__img-wrapper{
+.hangman__img-wrapper {
   width: 250px;
   height: 250px;
   overflow: hidden;
   background-image: url('assets/images/sprite.png');
   background-position: 0 0;
-  transform: scale(0.5);
-
-  @media #{$tablet}{
-    transform: scale(1);
-  }
-
 }

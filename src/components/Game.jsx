@@ -1,142 +1,77 @@
-import React from 'react';
-import Hangman from '../components/Hangman';
-
+import React, {useEffect, useState} from "react";
+import Hangman from "../components/Hangman";
+import {gameOver, gameWin, gamePlaying, wrongAnswersLimit} from "../constants";
 import Sound from "react-sound";
 import taDa from "../assets/audio/tada.mp3";
 import sad from "../assets/audio/sad.mp3";
-import 'react-simple-keyboard/build/css/index.css';
 import WrongLetters from "./WrongLetters";
 import Letters from "./Letters";
+import Message from "./Message";
 
+const Game = ({randomWord}) => {
+    console.log(randomWord);
+    const separatedWord = randomWord.split("");
+    const [answerIndexes, setAnswerIndexes] = useState([]);
+    const [wrongLetters, setWrongLetters] = useState([]);
+    const [gameState, setGameState] = useState(gamePlaying);
 
-export default class Game extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            randomWord: this.props.randomWord,
-            separatedWord: this.props.randomWord.split(''),
-            key: '',
-            wrongAnswers: 0,
-            wrongLetters: [],
-            answerIndexes: [],
-            gameOver: false,
-            gameWin: false
-        };
-    }
-
-    handleLetter = (e) => {
-        let key = '';
-        e.key ? key = e.key : key = e;  // determine whether osk or physical keyboard was used
-        const isLetter = (key >= "a" && key <= "z"); // checking if pressed key is a letter
-        if (isLetter) {
-            if (this.state.separatedWord.includes(key)) {
-                this.rightLetter(key)
-            } else {
-                this.wrongLetter(key)
-            }
-        }
-    };
-
-    rightLetter = (e) => {
+    const rightLetter = l => {
         const indexes = [];
-        var idx = this.state.randomWord.indexOf(e);
+        let idx = randomWord.indexOf(l);
         while (idx !== -1) {
             indexes.push(idx);
-            idx = this.state.randomWord.indexOf(e, idx + 1);
+            idx = randomWord.indexOf(l, idx + 1);
         } // finding indexes of correctly guessed letters
-        this.setState(prevState => {
-            return {
-                answerIndexes: [...this.state.answerIndexes, ...indexes].filter((el, pos) => {
-                    return [...this.state.answerIndexes, ...indexes].indexOf(el) === pos
-                }) // filtering array to avoid duplicates
-            }
-        })
+        setAnswerIndexes(prev => Array.from(new Set([...prev, ...indexes])))
     };
 
-    wrongLetter = (e) => {
-        if (!this.state.wrongLetters.includes(e)) {
-            this.setState(prevState => {
-                return {
-                    wrongAnswers: prevState.wrongAnswers + 1, // counter++
-                    wrongLetters: [...this.state.wrongLetters, e] // saving wrong letter
-                }
-            });
+    const handler = e => {
+        const isLetter = e.keyCode > 64 && e.keyCode < 91;
+        if (isLetter) {
+            if (separatedWord.includes(e.key)) {
+                rightLetter(e.key)
+            } else {
+                setWrongLetters(prev => Array.from(new Set([...prev, e.key])))
+            }
         }
     };
 
-    gameOver = () => {
-        window.removeEventListener('keydown', this.handleLetter);
-        document.body.classList.add('game-over-bg');
-        this.setState({
-            gameOver: true,
-            wrongLetters: [] //clear wrong letters list underneath
-        })
+    useEffect(() => {
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    }, []);
 
-    };
+    useEffect(() => {
+        if (wrongLetters.length === wrongAnswersLimit) {
+            setWrongLetters([]);
+            setGameState(gameOver);
+            document.body.classList.add("game-over-bg");
+            window.removeEventListener("keydown", handler);
+        }
+    }, [wrongLetters]);
 
-    gameWin() {
-        window.removeEventListener('keydown', this.handleLetter);
-        document.body.classList.add('game-win-bg');
-        this.setState({
-            gameWin: true,
-            wrongLetters: [],
-        })
-    }
+    useEffect(() => {
+        if (randomWord.length === answerIndexes.length) {
+            setGameState(gameWin);
+            document.body.classList.add("game-win-bg");
+            setWrongLetters([]);
+        }
+    }, [answerIndexes]);
 
-    render() {
-        const {gameOver, gameWin, wrongAnswers, wrongLetters, separatedWord, answerIndexes} = this.state;
-        return (
-            <div className={'content__wrapper'}>
-                <div className={'game-wrapper'}>
-                    <Hangman wrongAnswers={wrongAnswers}/>
-                    <div className={'game'}>
-                        <Letters separatedWord={separatedWord} answerIndexes={answerIndexes}/>
-                        <WrongLetters
-                            wrongLetters={wrongLetters}
-                            gameOver={gameOver}
-                            gameWin={gameWin}
-                        />
-                    </div>
-                    <Sound url={taDa} playStatus={gameWin ? Sound.status.PLAYING : Sound.status.PAUSED}/>
-                    <Sound url={sad} playStatus={gameOver ? Sound.status.PLAYING : Sound.status.PAUSED}/>
-                </div>
+
+
+    return (
+        <div className={"game__wrapper"}>
+            <Hangman wrongAnswers={wrongLetters.length}/>
+            <div className={"game"}>
+                <Letters separatedWord={separatedWord} answerIndexes={answerIndexes} gameState={gameState}/>
+                <WrongLetters wrongLetters={wrongLetters}/>
+                {/*<Message gameState={gameState}/>*/}
             </div>
-        )
-    }
+            <Sound url={taDa} playStatus={gameState === gameWin ? Sound.status.PLAYING : Sound.status.PAUSED}/>
+            <Sound url={sad} playStatus={gameState === gameOver ? Sound.status.PLAYING : Sound.status.PAUSED}/>
+        </div>
+    )
+};
 
-    componentDidMount() {
-        window.addEventListener('keydown', this.handleLetter);
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.wrongAnswers !== prevState.wrongAnswers) {
-            if (this.state.wrongAnswers === 11) {
-                this.gameOver();
-            }
-        }  // conditions need to be wrapped in if statements to avoid infinite looping
-
-        if (this.state.answerIndexes !== prevState.answerIndexes) {
-            if (this.state.randomWord.length === this.state.answerIndexes.length) {
-                this.gameWin();
-            }
-        } // conditions need to be wrapped in if statements to avoid infinite looping
-
-        if (this.props.randomWord !== prevProps.randomWord) {  // if props change, clear everything and start again
-            this.setState({
-                randomWord: this.props.randomWord,
-                separatedWord: this.props.randomWord.split(''),
-                answerIndexes: [],
-                wrongLetters: [],
-                wrongAnswers: 0,
-                gameOver: false,
-                gameWin: false
-            });
-
-            window.addEventListener('keydown', this.handleLetter);
-            document.body.classList.remove('game-win-bg');
-            document.body.classList.remove('game-over-bg');
-        }
-
-
-    }
-}
+export default Game;

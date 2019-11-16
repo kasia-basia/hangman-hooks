@@ -3,15 +3,15 @@ import {gameOver, gameWin, congrats, youLost} from "../constants";
 
 const Message = ({gameState}) => {
     let message;
-    if (gameState === gameWin){
+    if (gameState === gameWin) {
         message = congrats
     }
-    if (gameState === gameOver){
+    if (gameState === gameOver) {
         message = youLost
     }
     return (
-        <div>
-            <span className={'game-message'}>{message}</span>
+        <div className="game__message">
+            <span className="game__message-text">dlasdasdas</span>
         </div>
     );
 };

@@ -1,27 +1,22 @@
-.game-wrapper{
-  width: 100%;
+.game__wrapper {
+  flex-grow: 1;
   display: flex;
-  flex-direction: column;
-
-  @media #{$tablet} {
-    margin-top: 15vh;
-    flex-direction: row;
-  }
+  align-items: center;
 }
 
-.game{
+.game {
   width: 100%;
   height: 40vh;
-    @media #{$tablet} {
-      width: 70%;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-.guessed-word{
+.guessed-word {
   display: flex;
   flex-direction: row;
 
-  .letter{
+  .letter {
     border-bottom: 3px solid black;
     width: 5vh;
     padding-bottom: 5px;
@@ -30,12 +25,12 @@
     margin: 10px;
     position: relative;
 
-    span{
+    span {
       font-size: 55px;
       user-select: none;
     }
 
-    .hide{
+    .hide {
       background-color: $main;
       width: 100%;
       height: 100%;
@@ -44,16 +39,11 @@
   }
 }
 
-.wrong-letters{
+.wrong-letters {
   font-size: 35px;
-  margin-top: 50px;
+  min-height: 50px;
 
-  span{
+  span {
     margin: 5px;
-  }
-
-  .game-message{
-    display: block;
-    margin-top: 20px;
   }
 }

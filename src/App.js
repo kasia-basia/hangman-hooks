@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 import "./App.scss";
 
-import GameFn from "./components/GameFn";
+import Game from "./components/Game";
 import Header from "./components/Header";
-import {getRandomWord} from "./utils";
+import {pickRandomWord} from "./utils";
 
 function App() {
-    const [currentWord] = useState(() => getRandomWord());
+    const [currentWord] = useState(() => pickRandomWord());
 
     return (
         <div className="container">
             <Header/>
-            <GameFn randomWord={currentWord}/>
+            <Game randomWord={currentWord}/>
         </div>
     )
 }

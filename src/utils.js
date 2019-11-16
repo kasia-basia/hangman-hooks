@@ -1,4 +1,4 @@
 import randomWords from "./words";
 
-export const getRandomWord = () =>
+export const pickRandomWord = () =>
     randomWords.randomWords[Math.floor(Math.random() * randomWords.randomWords.length)];

@@ -1,41 +1,22 @@
-// VARIABLES
-
 $main: #F2DD47;
-$tablet: "screen and (min-width: 768px)";
-$desktop: "screen and (min-width: 1025px)";
 
-// GENERAL
-
-body{
+body {
   box-sizing: border-box;
   background-color: $main;
   font-family: 'Caveat Brush', sans-serif;
-
-
-
-  @media #{$tablet} {
-    overflow: hidden;
-  }
-
-
 }
-.game-over-bg{
+
+.game-over-bg {
   background-color: #ff6666;
 }
 
-.game-win-bg{
+.game-win-bg {
   background-color: #48e863;
 }
-.container{
-  max-width: 960px;
-  margin: 0 auto;
-  height: 90vh;
 
-}
-
-.content__wrapper{
-  height: calc(100% - 15vh);
+.container {
+  margin: 20px;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  height: 100vh;
 }
