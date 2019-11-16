@@ -26,12 +26,13 @@ const Game = ({randomWord}) => {
     };
 
     const handler = e => {
+        const char = e.key.toLowerCase();
         const isLetter = e.keyCode > 64 && e.keyCode < 91;
         if (isLetter) {
-            if (separatedWord.includes(e.key)) {
-                rightLetter(e.key)
+            if (separatedWord.includes(char)) {
+                rightLetter(char)
             } else {
-                setWrongLetters(prev => Array.from(new Set([...prev, e.key])))
+                setWrongLetters(prev => Array.from(new Set([...prev, char])))
             }
         }
     };
