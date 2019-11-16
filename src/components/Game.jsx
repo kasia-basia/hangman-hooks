@@ -37,28 +37,26 @@ const Game = ({randomWord}) => {
     };
 
     useEffect(() => {
+        if (randomWord.length === answerIndexes.length){
+            setGameState(gameWin);
+            return null
+        }
+        if (wrongLetters.length === wrongAnswersLimit){
+            setGameState(gameOver);
+            return null
+        }
         window.addEventListener("keydown", handler);
         return () => window.removeEventListener("keydown", handler);
-    }, []);
+    }, [answerIndexes, wrongLetters]);
 
-    useEffect(() => {
-        if (wrongLetters.length === wrongAnswersLimit) {
-            setWrongLetters([]);
-            setGameState(gameOver);
-            document.body.classList.add("game-over-bg");
-            window.removeEventListener("keydown", handler);
-        }
-    }, [wrongLetters]);
-
-    useEffect(() => {
-        if (randomWord.length === answerIndexes.length) {
-            setGameState(gameWin);
+    useEffect( () => {
+        if (gameState === gameWin) {
             document.body.classList.add("game-win-bg");
-            setWrongLetters([]);
         }
-    }, [answerIndexes]);
-
-
+        if (gameState === gameOver) {
+            document.body.classList.add("game-over-bg");
+        }
+    }, [gameState]);
 
     return (
         <div className={"game__wrapper"}>
@@ -66,7 +64,7 @@ const Game = ({randomWord}) => {
             <div className={"game"}>
                 <Letters separatedWord={separatedWord} answerIndexes={answerIndexes} gameState={gameState}/>
                 <WrongLetters wrongLetters={wrongLetters}/>
-                {/*<Message gameState={gameState}/>*/}
+                <Message gameState={gameState}/>
             </div>
             <Sound url={taDa} playStatus={gameState === gameWin ? Sound.status.PLAYING : Sound.status.PAUSED}/>
             <Sound url={sad} playStatus={gameState === gameOver ? Sound.status.PLAYING : Sound.status.PAUSED}/>

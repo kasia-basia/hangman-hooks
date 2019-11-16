@@ -11,7 +11,7 @@ const Message = ({gameState}) => {
     }
     return (
         <div className="game__message">
-            <span className="game__message-text">dlasdasdas</span>
+            <span className="game__message-text">{message}</span>
         </div>
     );
 };
