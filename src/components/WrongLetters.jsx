@@ -1,9 +1,10 @@
 import React from "react";
+import {WrongLetter} from "./Game.styled";
 
 const WrongLetters = ({wrongLetters}) => (
-    <div className={"wrong-letters"}>
+    <WrongLetter>
         {wrongLetters.map((el, i) => <span key={i}>{el}</span>)}
-    </div>
+    </WrongLetter>
 );
 
 export default WrongLetters;

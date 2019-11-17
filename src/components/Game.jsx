@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import Hangman from "../components/Hangman";
 import {gameOver, gameWin, wrongAnswersLimit} from "../constants";
 import taDa from "../assets/audio/tada.mp3";
@@ -8,6 +8,7 @@ import error from "../assets/audio/error.mp3";
 import WrongLetters from "./WrongLetters";
 import Letters from "./Letters";
 import Message from "./Message";
+import {GameWrapper, GameContainer} from "./Game.styled";
 
 const Game = ({randomWord, setGameState, gameState, sound}) => {
     console.log(randomWord);
@@ -63,14 +64,14 @@ const Game = ({randomWord, setGameState, gameState, sound}) => {
     }, [answerIndexes, wrongLetters]);
 
     return (
-        <div className={"game__wrapper"}>
+        <GameWrapper>
             <Hangman wrongAnswers={wrongLetters.length}/>
-            <div className={"game"}>
+            <GameContainer>
                 <Letters separatedWord={separatedWord} answerIndexes={answerIndexes} gameState={gameState}/>
                 <WrongLetters wrongLetters={wrongLetters}/>
                 <Message gameState={gameState}/>
-            </div>
-            </div>
+            </GameContainer>
+        </GameWrapper>
     )
 };
 

@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import "./App.scss";
 import Game from "./components/Game";
 import Header from "./components/Header";
 import randomWords from "./words";
 import {gamePlaying} from "./constants";
+import {Container} from "./App.styled";
 
 export const pickRandomWord = () =>
     randomWords.randomWords[Math.floor(Math.random() * randomWords.randomWords.length)];
@@ -14,7 +14,7 @@ function App() {
     const [sound, setSound] = useState(true);
 
     return (
-        <div className="container">
+        <Container gameState={gameState}>
             <Header
                 sound={sound}
                 setSound={setSound}
@@ -25,7 +25,7 @@ function App() {
                 gameState={gameState}
                 randomWord={currentWord}
             />
-        </div>
+        </Container>
     )
 }
 

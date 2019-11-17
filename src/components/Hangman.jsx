@@ -1,12 +1,10 @@
 import React from 'react';
-
+import {HangmanContainer, HangmanImg} from "./Game.styled";
 
 export const Hangman = ({wrongAnswers}) => (
-    <div className={"hangman"}>
-        <div className={"hangman__img-wrapper"} style={{
-            backgroundPosition: `calc(${wrongAnswers}*(-250px)) 0`
-        }}/>
-    </div>
+    <HangmanContainer>
+        <HangmanImg position={wrongAnswers}/>
+    </HangmanContainer>
 );
 
-export default Hangman
+export default Hangman;

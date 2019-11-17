@@ -1,21 +1,21 @@
 import React from "react";
 import {gameOver} from "../constants";
-
+import {GuesseWord, Letter, Cover} from "./Game.styled";
 
 export const Letters = ({separatedWord, answerIndexes, gameState}) => (
-    <div className="guessed-word">
+    <GuesseWord>
         {separatedWord.map((el, i) => (
-            <div key={i} className="letter">
+            <Letter key={i}>
                 {
                     gameState !== gameOver && !answerIndexes.includes(i)
-                    ? <div className="hide"/>
+                    ? <Cover/>
                     : null
                 }
                 <span>{el}</span>
-            </div>
+            </Letter>
         ))
         }
-    </div>
+    </GuesseWord>
 );
 
 export default Letters;
