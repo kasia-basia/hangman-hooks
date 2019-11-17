@@ -1,19 +1,23 @@
 import React, {useEffect, useState} from "react";
 import Hangman from "../components/Hangman";
-import {gameOver, gameWin, gamePlaying, wrongAnswersLimit} from "../constants";
-import Sound from "react-sound";
+import {gameOver, gameWin, wrongAnswersLimit} from "../constants";
 import taDa from "../assets/audio/tada.mp3";
 import sad from "../assets/audio/sad.mp3";
+import tap from "../assets/audio/tap.wav";
+import error from "../assets/audio/error.mp3";
 import WrongLetters from "./WrongLetters";
 import Letters from "./Letters";
 import Message from "./Message";
 
-const Game = ({randomWord}) => {
+const Game = ({randomWord, setGameState, gameState, sound}) => {
     console.log(randomWord);
     const separatedWord = randomWord.split("");
     const [answerIndexes, setAnswerIndexes] = useState([]);
     const [wrongLetters, setWrongLetters] = useState([]);
-    const [gameState, setGameState] = useState(gamePlaying);
+    const winSound = new Audio(taDa);
+    const loseSound = new Audio(sad);
+    const tapSound = new Audio(tap);
+    const errorSound = new Audio(error);
 
     const rightLetter = l => {
         const indexes = [];
@@ -29,9 +33,15 @@ const Game = ({randomWord}) => {
         const char = e.key.toLowerCase();
         const isLetter = e.keyCode > 64 && e.keyCode < 91;
         if (isLetter) {
-            if (separatedWord.includes(char)) {
+            if (wrongLetters.includes(char)){
+                sound && errorSound.play()
+            }
+            else if (separatedWord.includes(char)) {
+                sound && tapSound.play();
                 rightLetter(char)
-            } else {
+            }
+            else {
+                sound && tapSound.play();
                 setWrongLetters(prev => Array.from(new Set([...prev, char])))
             }
         }
@@ -40,24 +50,17 @@ const Game = ({randomWord}) => {
     useEffect(() => {
         if (randomWord.length === answerIndexes.length){
             setGameState(gameWin);
+            sound && winSound.play();
             return null
         }
         if (wrongLetters.length === wrongAnswersLimit){
             setGameState(gameOver);
+            sound && loseSound.play();
             return null
         }
         window.addEventListener("keydown", handler);
         return () => window.removeEventListener("keydown", handler);
     }, [answerIndexes, wrongLetters]);
-
-    useEffect( () => {
-        if (gameState === gameWin) {
-            document.body.classList.add("game-win-bg");
-        }
-        if (gameState === gameOver) {
-            document.body.classList.add("game-over-bg");
-        }
-    }, [gameState]);
 
     return (
         <div className={"game__wrapper"}>
@@ -67,9 +70,7 @@ const Game = ({randomWord}) => {
                 <WrongLetters wrongLetters={wrongLetters}/>
                 <Message gameState={gameState}/>
             </div>
-            <Sound url={taDa} playStatus={gameState === gameWin ? Sound.status.PLAYING : Sound.status.PAUSED}/>
-            <Sound url={sad} playStatus={gameState === gameOver ? Sound.status.PLAYING : Sound.status.PAUSED}/>
-        </div>
+            </div>
     )
 };
 
