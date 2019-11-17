@@ -1,9 +1,10 @@
 ## Hangman - Wisielec
 
-Try to guess some of the most crazy polish words I could think of! 
+Try to guess some of the most crazy polish words I could think of!
+This is a hooks rewrite of my old project.
 
 ### Tools used
-React.js, SASS, yarn 
+React
 
 ### Upcoming features
 Please note that this is a work in progress! 
